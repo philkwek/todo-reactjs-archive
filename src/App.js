@@ -47,10 +47,11 @@ function App() {
   const [allTasks, setAllTasks] = useState('');
 
   //Uncomment when uploading to site
-  if (allTasks == ''){
+  if (allTasks === ''){
     $.get("https://us-central1-task-manager-api-4f9a8.cloudfunctions.net/tasks", function(data, status){
       const tasks = JSON.parse(data);
       setAllTasks(tasks);
+      console.log('Fetched Data');
     });
   };
 
@@ -62,7 +63,7 @@ function App() {
     const taskData = event;
     //save to cloud
     setAllTasks((prevState) => {
-      return [taskData, ...prevState]
+      return [...prevState, taskData]
     });
     closeTaskHandler();
   };
@@ -80,13 +81,29 @@ function App() {
       },
       success: function () {console.log("Put success")}
     });
-
   };
+
+  const taskDeleteHandler = (taskId) => {
+    //delete task from client
+    const newData = allTasks.filter(function(task){
+      return task.id != taskId;
+    });
+
+    setAllTasks(newData);
+
+    //delete task from server
+    $.ajax({
+      url:"https://us-central1-task-manager-api-4f9a8.cloudfunctions.net/tasks/" + taskId,
+      type:"DELETE",
+      data: {},
+      success: function () {console.log("Delete success")}
+    });
+  }
 
   return (
     <div className="grid grid-cols-1 gap-4 m-5 justify-center">
       <div><h1 className="text-3xl font-bold font-sans">My Tasks</h1></div>
-      <TaskDisplay tasks={allTasks} onTaskChecked={taskCheckedHandler}></TaskDisplay>
+      <TaskDisplay tasks={allTasks} onTaskDelete={taskDeleteHandler} onTaskChecked={taskCheckedHandler}></TaskDisplay>
       {newTask}
 
       <div className="fixed right-5 bottom-5">

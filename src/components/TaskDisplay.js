@@ -7,9 +7,13 @@ const TaskDisplay = (props) => {
         props.onTaskChecked(event);
     }
 
+    const taskDeleteHandler = (taskId) => {
+        props.onTaskDelete(taskId);
+    }
+
     return (
         <div className="flex flex-row items-center">
-            <TaskList onTaskChecked={taskCheckHandler} tasks={props.tasks} />
+            <TaskList onTaskDelete={taskDeleteHandler} onTaskChecked={taskCheckHandler} tasks={props.tasks} />
         </div>
     );
 };

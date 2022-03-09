@@ -8,18 +8,22 @@ const TaskList = (props) => {
         props.onTaskChecked(event);
     };
 
+    const taskDeleteHandler = (taskId) => {
+        props.onTaskDelete(taskId);
+    }
+
     if(props.tasks){
         if (props.tasks.length > 0){
             let key = 0;
             taskContent = props.tasks.map(data =>
-            <TaskItem onTaskChecked={taskCheckedHandler} key={key += 1} taskStatus ={data.taskStatus} taskId = {data.id} taskName = {data.taskName} taskDescription = {data.taskDescription}></TaskItem>)
+            <TaskItem onTaskChecked={taskCheckedHandler} onTaskDelete={taskDeleteHandler} key={key += 1} taskStatus ={data.taskStatus} taskId = {data.id} taskName = {data.taskName} taskDescription = {data.taskDescription}></TaskItem>)
         }
     };
 
     return (
-        <div>
+        <ul>
             {taskContent}
-        </div>
+        </ul>
     );
 }
 
